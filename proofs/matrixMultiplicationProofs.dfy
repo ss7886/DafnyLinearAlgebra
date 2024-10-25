@@ -1,28 +1,6 @@
-include "vectorFunctions.dfy"
-
-function matVecMult (mat : Matrix, vec : Vector) : (res : Vector)
-reads *
-requires matNumCols (mat) == vecLength (vec)
-ensures vecLength (res) == matNumRows (mat)
-ensures forall i | 0 <= i < matNumRows (mat) :: vecGet (res, i) == vecDotProd (matGetRow (mat, i), vec)
-{
-    matVecMultAux (mat, vec, 0)
-}
-
-function matVecMultAux (mat : Matrix, vec : Vector, i : int) : (res : Vector)
-reads *
-requires matNumCols (mat) == vecLength (vec)
-requires 0 <= i <= matNumRows (mat)
-ensures vecLength (res) == matNumRows (mat) - i
-ensures forall j | i <= j < matNumRows (mat) :: vecGet (res, j - i) == vecDotProd (matGetRow (mat, j), vec)
-decreases matNumRows (mat) - i
-{
-    if i == matNumRows (mat) 
-    then vecEmpty
-    else
-        var row := matGetRow (mat, i);
-        vecAppend (vecDotProd (row, vec), matVecMultAux (mat, vec, i + 1))
-}
+include "../matrixMultiplication.dfy"
+include "vectorFunctionProofs.dfy"
+include "vectorProofs.dfy"
 
 lemma matVecMultAuxDist (mat : Matrix, vec1 : Vector, vec2 : Vector, i : int)
 requires matNumCols (mat) == vecLength (vec1)

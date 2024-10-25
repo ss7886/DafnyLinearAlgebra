@@ -1,10 +1,10 @@
 include "matrix.dfy"
 
-type MatrixRow = matIndex : (Matrix, int) | 0 <= matIndex.1 < matNumRows (matIndex.0) witness *
-type MatrixCol = matIndex : (Matrix, int) | 0 <= matIndex.1 < matNumCols (matIndex.0) witness *
+type MatrixRow = row : (Matrix, int) | 0 <= row.1 < matNumRows (row.0) witness *
+type MatrixCol = col : (Matrix, int) | 0 <= col.1 < matNumCols (col.0) witness *
 
 datatype Vector = 
-    VectorInd (vec : seq<real>)
+    VectorInd (list : seq<real>)  // Defined inductively
     | MatrixRow (matRow : MatrixRow)
     | MatrixCol (matCol : MatrixCol)
 
@@ -32,7 +32,6 @@ ensures 0 <= vecLength(vec)
 }
 
 function vecGet (vec : Vector, i : int) : real
-reads *
 requires 0 <= i < vecLength (vec)
 {
     match vec
@@ -41,48 +40,17 @@ requires 0 <= i < vecLength (vec)
     case MatrixCol (matCol) => matGet (matCol.0, i, matCol.1)
 }
 
-function vecAppend (x : real, vec : Vector) : (res : Vector)
-reads *
-ensures vecLength (res) == vecLength (vec) + 1
-// ensures forall i | 0 <= i < vecLength (vec) :: vecGet (vec, i) == vecGet (res, i + 1)
-ensures res.VectorInd?
-requires vec.VectorInd?
-{
-    VectorInd ([x] + vec.vec)
-}
-
 predicate vecEquals (vec1 : Vector, vec2 : Vector)
-reads *
 requires vecLength (vec1) == vecLength (vec2)
 {
     forall i | 0 <= i < vecLength (vec1) :: vecGet (vec1, i) == vecGet (vec2, i)
 }
 
-lemma vecEqualsSymmetric (vec1 : Vector, vec2 : Vector)
-requires vecLength (vec1) == vecLength (vec2)
-ensures vecEquals (vec1, vec2) <==> vecEquals (vec2, vec1)
-{}
-
-lemma vecEqualsTransitive (vec1 : Vector, vec2 : Vector, vec3 : Vector)
-requires vecLength (vec1) == vecLength (vec2)
-requires vecLength (vec1) == vecLength (vec3)
-requires vecEquals (vec1, vec2) && vecEquals (vec2, vec3)
-ensures vecEquals (vec1, vec3)
-{}
-
-lemma vecEqualsAppend (vec1 : Vector, vec2 : Vector, x : real)
-requires vecLength (vec1) == vecLength (vec2)
-requires vecEquals (vec1, vec2)
-requires vec1.VectorInd? && vec2.VectorInd?
-ensures vecEquals (vecAppend (x, vec1), vecAppend (x, vec2))
+function vecAppend (x : real, vec : Vector) : (res : Vector)
+ensures vecLength (res) == vecLength (vec) + 1
+// ensures forall i | 0 <= i < vecLength (vec) :: vecGet (vec, i) == vecGet (res, i + 1)
+ensures res.VectorInd?
+requires vec.VectorInd?
 {
-    assert vecGet (vecAppend (x, vec1), 0) == x;
-    assert vecGet (vecAppend (x, vec2), 0) == x;
-    assert forall i {:trigger vecGet (vecAppend (x, vec1), i)} | 1 <= i < vecLength (vec1) + 1 ::
-            vecGet (vecAppend (x, vec1), i) == vecGet (vec1, i - 1);
-    assert forall i {:trigger vecGet (vecAppend (x, vec1), i)} | 1 <= i < vecLength (vec1) + 1 ::
-            vecGet (vecAppend (x, vec2), i) == vecGet (vec2, i - 1);
-    assert forall i {:trigger vecGet (vecAppend (x, vec1), i + 1)} | 1 <= i < vecLength (vec1) + 1 :: 
-            vecGet (vecAppend (x, vec1), i) == vecGet (vecAppend (x, vec2), i);
-    assert forall i | 0 <= i < vecLength (vec1) + 1 :: vecGet (vecAppend (x, vec1), i) == vecGet (vecAppend (x, vec2), i);
+    VectorInd ([x] + vec.list)
 }
