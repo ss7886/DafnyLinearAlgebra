@@ -75,7 +75,7 @@ decreases cols - j
     else vecAppend (f (i, j), makeMatrixRow (rows, cols, f, i, j + 1))
 }
 
-function matT (mat : Matrix) : (res : Matrix)
+function matTr (mat : Matrix) : (res : Matrix)
 ensures matNumRows (mat) == matNumCols (res)
 ensures matNumCols (mat) == matNumRows (res)
 ensures matIsTranspose (mat, res)

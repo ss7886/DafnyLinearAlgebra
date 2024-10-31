@@ -46,6 +46,11 @@ requires vecLength (vec1) == vecLength (vec2)
     forall i | 0 <= i < vecLength (vec1) :: vecGet (vec1, i) == vecGet (vec2, i)
 }
 
+predicate vecZero (vec : Vector)
+{
+    forall i | 0 <= i < vecLength (vec) :: vecGet (vec, i) == 0.0
+}
+
 function vecAppend (x : real, vec : Vector) : (res : Vector)
 ensures vecLength (res) == vecLength (vec) + 1
 // ensures forall i | 0 <= i < vecLength (vec) :: vecGet (vec, i) == vecGet (res, i + 1)

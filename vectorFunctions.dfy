@@ -16,7 +16,7 @@ decreases vecLength (vec1) - i
     else vecGet (vec1, i) * vecGet (vec2, i) + vecDotProdAux (vec1, vec2, i + 1)
 }
 
-function vecNorm(vec : Vector) : real
+function vecNormSq(vec : Vector) : real
 {
     vecDotProd (vec, vec)
 }
@@ -41,14 +41,14 @@ decreases vecLength (vec1) - i
     else vecAppend (vecGet (vec1, i) + vecGet (vec2, i), vecAddAux (vec1, vec2, i + 1))
 }
 
-function vecScale (vec : Vector, alpha : real) : (res : Vector)
+function vecScale (alpha : real, vec : Vector) : (res : Vector)
 ensures vecLength (res) == vecLength (vec)
 ensures forall i | 0 <= i < vecLength (vec) :: vecGet (res, i) == alpha * vecGet (vec, i)
 {
-    vecScaleAux (vec, alpha, 0)
+    vecScaleAux (alpha, vec, 0)
 }
 
-function vecScaleAux (vec : Vector, alpha : real, i : int) : (res : Vector)
+function vecScaleAux (alpha : real, vec : Vector, i : int) : (res : Vector)
 requires 0 <= i <= vecLength (vec)
 ensures vecLength (res) == vecLength (vec) - i
 ensures forall j | i <= j < vecLength (vec) :: vecGet (res, j - i) == alpha * vecGet (vec, j)
@@ -56,7 +56,7 @@ decreases vecLength (vec) - i
 {
     if i == vecLength (vec)
     then vecEmpty
-    else vecAppend (alpha * vecGet (vec, i), vecScaleAux (vec, alpha, i + 1))
+    else vecAppend (alpha * vecGet (vec, i), vecScaleAux (alpha, vec, i + 1))
 }
 
 function vecSub (vec1 : Vector, vec2 : Vector) : (res : Vector)
@@ -64,5 +64,5 @@ requires vecLength (vec1) == vecLength (vec2)
 ensures vecLength (res) == vecLength (vec1)
 ensures forall i | 0 <= i < vecLength (res) :: vecGet (res, i) == vecGet (vec1, i) - vecGet (vec2, i)
 {
-    vecAdd (vec1, vecScale (vec2, -1.0))
+    vecAdd (vec1, vecScale (-1.0, vec2))
 }
