@@ -75,7 +75,7 @@ decreases matNumCols (mat) - i
     } else {
         dotProdTrAux (mat, vec1, vec2, i + 1);
         matVecMultCol (mat, vec1, i);
-        vecDotProdEq (
+        vecDotProdEqL (
             matVecMultAux2 (mat, vec1, 0, i), 
             vecAdd (
                 vecScale (vecGet (vec1, i), matGetCol (mat, i)),
@@ -83,13 +83,47 @@ decreases matNumCols (mat) - i
             ),
             vec2
         );
-        vecDotProdDistLH (
+        vecDotProdDistL (
             vecScale (vecGet (vec1, i), matGetCol (mat, i)),
             matVecMultAux2 (mat, vec1, 0, i + 1),
             vec2
         );
-        vecDotProdScale (vecGet (vec1, i), matGetCol (mat, i), vec2);
+        vecDotProdScaleL (vecGet (vec1, i), matGetCol (mat, i), vec2);
         matTrRowsCols (mat);
-        vecDotProdEq (matGetRow (matTr (mat), i), matGetCol (mat, i), vec2);
+        vecDotProdEqL (matGetRow (matTr (mat), i), matGetCol (mat, i), vec2);
     }
 }
+
+lemma identityVecMult (id : Matrix, vec : Vector)
+requires matNumRows (id) == matNumCols (id)
+requires matIsIdentity (id)
+requires matNumCols (id) == vecLength (vec)
+ensures vecEquals (matVecMult (id, vec), vec)
+{
+    identityVecMultAux (id, vec, 0);
+}
+
+lemma identityVecMultAux (id : Matrix, vec : Vector, i : int)
+requires matNumRows (id) == matNumCols (id)
+requires matIsIdentity (id)
+requires matNumCols (id) == vecLength (vec)
+requires 0 <= i <= matNumRows (id)
+ensures forall j | i <= j < matNumRows (id) :: vecGet (matVecMultAux (id, vec, i), j - i) == vecGet (vec, j)
+decreases matNumRows (id) - i
+{
+    if i < matNumRows (id) {
+        identityVecMultAux (id, vec, i + 1);
+        identityVecDotProdAux (id, vec, i, 0);
+    }
+}
+
+lemma identityVecDotProdAux (id : Matrix, vec : Vector, i : int, j : int)
+requires matNumRows (id) == matNumCols (id)
+requires matIsIdentity (id)
+requires matNumCols (id) == vecLength (vec)
+requires 0 <= i < matNumRows (id)
+requires 0 <= j <= matNumCols (id)
+ensures j <= i ==> vecDotProdAux (matGetRow (id, i), vec, j) == vecGet (vec, i)
+ensures j > i ==> vecDotProdAux (matGetRow (id, i), vec, j) == 0.0
+decreases matNumCols (id) - j
+{}
