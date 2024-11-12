@@ -1,6 +1,6 @@
 include "../vector.dfy"
 
-lemma vecEqualsSymmetric (vec1 : Vector, vec2 : Vector)
+lemma vecEqualsSymm (vec1 : Vector, vec2 : Vector)
 requires vecLength (vec1) == vecLength (vec2)
 ensures vecEquals (vec1, vec2) <==> vecEquals (vec2, vec1)
 {}

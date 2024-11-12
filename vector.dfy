@@ -10,14 +10,16 @@ datatype Vector =
 
 const vecEmpty := VectorInd ([])
 
-function matGetRow (mat : Matrix, i : int) : Vector
+function matGetRow (mat : Matrix, i : int) : (res : Vector)
 requires 0 <= i < matNumRows (mat)
+ensures vecLength (res) == matNumCols (mat)
 {
     Vector.MatrixRow ((mat, i))
 }
 
-function matGetCol (mat : Matrix, i : int) : Vector
+function matGetCol (mat : Matrix, i : int) : (res : Vector)
 requires 0 <= i < matNumCols (mat)
+ensures vecLength (res) == matNumRows (mat)
 {
     Vector.MatrixCol ((mat, i))
 }

@@ -1,5 +1,12 @@
 include "vector.dfy"
 
+predicate matEquals (mat1 : Matrix, mat2 : Matrix)
+requires matNumRows (mat1) == matNumRows (mat2)
+requires matNumCols (mat1) == matNumCols (mat2)
+{
+    forall i | 0 <= i < matNumRows (mat1) :: vecEquals (matGetRow (mat1, i), matGetRow (mat2, i))
+}
+
 predicate matIsIdentity (mat : Matrix)
 requires matNumRows (mat) == matNumCols (mat)
 {
@@ -13,6 +20,12 @@ requires matNumCols (mat1) == matNumRows (mat2)
 {
     forall i, j | 0 <= i < matNumRows (mat1) && 0 <= j < matNumCols (mat1) ::
         matGet (mat1, i, j) == matGet (mat2, j, i)
+}
+
+predicate matIsSymmetric (mat : Matrix)
+requires matNumRows (mat) == matNumCols (mat)
+{
+    matIsTranspose (mat, mat)
 }
 
 function matEmpty (numCols : int) : Matrix

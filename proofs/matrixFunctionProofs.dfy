@@ -10,6 +10,30 @@ ensures forall i | 0 <= i < matNumCols (mat) ::
     vecEquals (matGetCol (mat, i), matGetRow (matTr (mat), i))
 {}
 
+lemma matSymmetricTwice (mat : Matrix)
+requires matNumRows (mat) == matNumCols (mat)
+ensures matEquals (mat, matTr (matTr (mat)))
+{}
+
+lemma matSymmetricEquals (mat : Matrix)
+requires matNumRows (mat) == matNumCols (mat)
+requires matIsSymmetric (mat)
+ensures matEquals (mat, matTr (mat))
+{}
+
+// M1 = M2 => M1 v = M2 v
+lemma matEqMultVec (mat1 : Matrix, mat2 : Matrix, vec : Vector)
+requires matNumRows (mat1) == matNumRows (mat2)
+requires matNumCols (mat1) == matNumCols (mat2)
+requires matNumCols (mat1) == vecLength (vec)
+requires matEquals (mat1, mat2)
+ensures vecEquals (matVecMult (mat1, vec), matVecMult (mat2, vec))
+{
+    forall i | 0 <= i < matNumRows (mat1) {
+        vecDotProdEqL (matGetRow (mat1, i), matGetRow (mat2, i), vec);
+    }
+}
+
 // <M v1, v2> == <v1, M^T v2>
 lemma dotProdTr (mat : Matrix, vec1 : Vector, vec2 : Vector)
 requires matNumCols (mat) == vecLength (vec1)
