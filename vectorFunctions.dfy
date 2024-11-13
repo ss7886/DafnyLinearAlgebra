@@ -1,5 +1,6 @@
 include "vector.dfy"
 
+// Returns the inner product of two vectors
 function vecDotProd (vec1 : Vector, vec2 : Vector) : real
 requires vecLength (vec1) == vecLength (vec2)
 {
@@ -16,11 +17,13 @@ decreases vecLength (vec1) - i
     else vecGet (vec1, i) * vecGet (vec2, i) + vecDotProdAux (vec1, vec2, i + 1)
 }
 
+// Returns the squared euclidean norm (2-norm) of a vector
 function vecNormSq(vec : Vector) : real
 {
     vecDotProd (vec, vec)
 }
 
+// Returns the sum of two vectors
 function vecAdd (vec1 : Vector, vec2 : Vector) : (res : Vector)
 requires vecLength (vec1) == vecLength (vec2)
 ensures vecLength (res) == vecLength (vec1)
@@ -41,6 +44,7 @@ decreases vecLength (vec1) - i
     else vecAppend (vecGet (vec1, i) + vecGet (vec2, i), vecAddAux (vec1, vec2, i + 1))
 }
 
+// Returns the product of a vector with a scalar
 function vecScale (alpha : real, vec : Vector) : (res : Vector)
 ensures vecLength (res) == vecLength (vec)
 ensures forall i | 0 <= i < vecLength (vec) :: vecGet (res, i) == alpha * vecGet (vec, i)
@@ -59,6 +63,7 @@ decreases vecLength (vec) - i
     else vecAppend (alpha * vecGet (vec, i), vecScaleAux (alpha, vec, i + 1))
 }
 
+// Returns the difference between two vectors
 function vecSub (vec1 : Vector, vec2 : Vector) : (res : Vector)
 requires vecLength (vec1) == vecLength (vec2)
 ensures vecLength (res) == vecLength (vec1)

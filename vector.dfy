@@ -5,11 +5,12 @@ type MatrixCol = col : (Matrix, int) | 0 <= col.1 < matNumCols (col.0) witness *
 
 datatype Vector = 
     VectorInd (list : seq<real>)  // Defined inductively
-    | MatrixRow (matRow : MatrixRow)
-    | MatrixCol (matCol : MatrixCol)
+    | MatrixRow (matRow : MatrixRow)  // Static (can't append values to a row)
+    | MatrixCol (matCol : MatrixCol)  // Static (can't append values to a column)
 
 const vecEmpty := VectorInd ([])
 
+// Return the i-th row of a matrix as a vector
 function matGetRow (mat : Matrix, i : int) : (res : Vector)
 requires 0 <= i < matNumRows (mat)
 ensures vecLength (res) == matNumCols (mat)
@@ -17,6 +18,7 @@ ensures vecLength (res) == matNumCols (mat)
     Vector.MatrixRow ((mat, i))
 }
 
+// Return the i-th column of a matrix as a vector
 function matGetCol (mat : Matrix, i : int) : (res : Vector)
 requires 0 <= i < matNumCols (mat)
 ensures vecLength (res) == matNumRows (mat)
@@ -53,9 +55,10 @@ predicate vecZero (vec : Vector)
     forall i | 0 <= i < vecLength (vec) :: vecGet (vec, i) == 0.0
 }
 
+// Append a value to an inductively defined vector and return the result
+// Cannot append a value to a row or column of a matrix.
 function vecAppend (x : real, vec : Vector) : (res : Vector)
 ensures vecLength (res) == vecLength (vec) + 1
-// ensures forall i | 0 <= i < vecLength (vec) :: vecGet (vec, i) == vecGet (res, i + 1)
 ensures res.VectorInd?
 requires vec.VectorInd?
 {

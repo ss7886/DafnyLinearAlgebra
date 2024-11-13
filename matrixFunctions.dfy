@@ -1,5 +1,6 @@
 include "vector.dfy"
 
+// Checks entry-wise equality of two matrices
 predicate matEquals (mat1 : Matrix, mat2 : Matrix)
 requires matNumRows (mat1) == matNumRows (mat2)
 requires matNumCols (mat1) == matNumCols (mat2)
@@ -7,6 +8,7 @@ requires matNumCols (mat1) == matNumCols (mat2)
     forall i | 0 <= i < matNumRows (mat1) :: vecEquals (matGetRow (mat1, i), matGetRow (mat2, i))
 }
 
+// Checks whether a square matrix is the identity matrix
 predicate matIsIdentity (mat : Matrix)
 requires matNumRows (mat) == matNumCols (mat)
 {
@@ -14,6 +16,7 @@ requires matNumRows (mat) == matNumCols (mat)
         if i == j then matGet (mat, i, j) == 1.0 else matGet (mat, i, j) == 0.0 
 }
 
+// Checks whether two matrices are transposes of each other
 predicate matIsTranspose (mat1 : Matrix, mat2 : Matrix)
 requires matNumRows (mat1) == matNumCols (mat2)
 requires matNumCols (mat1) == matNumRows (mat2)
@@ -22,18 +25,21 @@ requires matNumCols (mat1) == matNumRows (mat2)
         matGet (mat1, i, j) == matGet (mat2, j, i)
 }
 
+// Checks whether a square matrix is symmetric
 predicate matIsSymmetric (mat : Matrix)
 requires matNumRows (mat) == matNumCols (mat)
 {
     matIsTranspose (mat, mat)
 }
 
+// Returns an empty matrix with a certain number of columns
 function matEmpty (numCols : int) : Matrix
 requires 0 <= numCols
 {
     ([], 0, numCols)
 }
 
+// Appends a row to a matrix, returning the result
 function matAppendRow (row : Vector, mat : Matrix) : (res : Matrix)
 requires vecLength (row) == matNumCols (mat)
 requires row.VectorInd?
@@ -47,6 +53,8 @@ ensures forall i, j | 0 <= i < matNumRows (mat) && 0 <= j < matNumCols (mat) ::
     ([row.list] + mat.0, mat.1 + 1, mat.2)
 }
 
+// Creates a matrix with designated number of rows and columns using f
+// Entry at location (i, j) has value f (i, j)
 function makeMatrix (rows : int, cols : int, f : (int, int) --> real) : (res : Matrix)
 requires 0 <= rows
 requires 0 <= cols
@@ -88,6 +96,7 @@ decreases cols - j
     else vecAppend (f (i, j), makeMatrixRow (rows, cols, f, i, j + 1))
 }
 
+// Returns the transpose of a matrix
 function matTr (mat : Matrix) : (res : Matrix)
 ensures matNumRows (mat) == matNumCols (res)
 ensures matNumCols (mat) == matNumRows (res)
