@@ -10,7 +10,10 @@ ensures vecEquals (vecAdd (vec1, vec2), vecAdd (vec2, vec1))
 lemma vecAddTransitive (vec1 : Vector, vec2 : Vector, vec3 : Vector)
 requires vecLength (vec1) == vecLength (vec2)
 requires vecLength (vec1) == vecLength (vec3)
-ensures vecEquals (vecAdd (vecAdd (vec1, vec2), vec3), vecAdd (vec1, vecAdd (vec2, vec3)))
+ensures vecEquals (
+    vecAdd (vecAdd (vec1, vec2), vec3),
+    vecAdd (vec1, vecAdd (vec2, vec3))
+)
 {}
 
 lemma vecAddEq (vec1 : Vector, vec2 : Vector, vec3 : Vector)
@@ -148,7 +151,8 @@ decreases vecLength (vec1) - i
 lemma vecDotProdDistR (vec1 : Vector, vec2 : Vector, vec3 : Vector)
 requires vecLength (vec1) == vecLength (vec2)
 requires vecLength (vec1) == vecLength (vec3)
-ensures vecDotProd (vec1, vecAdd (vec2, vec3)) == vecDotProd (vec1, vec2) + vecDotProd (vec1, vec3)
+ensures vecDotProd (vec1, vecAdd (vec2, vec3)) == 
+    vecDotProd (vec1, vec2) + vecDotProd (vec1, vec3)
 {
     vecDotProdAuxDist (vec1, vec2, vec3, 0);
 }
@@ -196,7 +200,8 @@ ensures vecNormSq (vecAdd (vec1, vec2)) == vecNormSq (vec1) + 2.0 * vecDotProd (
 // ||v1 - v2||^2 = ||v1||^2 - 2 <v1, v2> + ||v2||^2
 lemma vecNormDistSub (vec1 : Vector, vec2 : Vector)
 requires vecLength (vec1) == vecLength (vec2)
-ensures vecNormSq (vecSub (vec1, vec2)) == vecNormSq (vec1) - 2.0 * vecDotProd (vec1, vec2) + vecNormSq (vec2)
+ensures vecNormSq (vecSub (vec1, vec2)) == 
+    vecNormSq (vec1) - 2.0 * vecDotProd (vec1, vec2) + vecNormSq (vec2)
 {
     // ||v1 + -v2||^2 == ||v1||^2 + 2 <v1, -v2> + ||-v2||^2
     vecNormDist (vec1, vecScale (-1.0, vec2));

@@ -5,7 +5,8 @@ predicate matEquals (mat1 : Matrix, mat2 : Matrix)
 requires matNumRows (mat1) == matNumRows (mat2)
 requires matNumCols (mat1) == matNumCols (mat2)
 {
-    forall i | 0 <= i < matNumRows (mat1) :: vecEquals (matGetRow (mat1, i), matGetRow (mat2, i))
+    forall i | 0 <= i < matNumRows (mat1) ::
+        vecEquals (matGetRow (mat1, i), matGetRow (mat2, i))
 }
 
 // Checks whether a square matrix is the identity matrix
@@ -54,7 +55,7 @@ ensures forall i, j | 0 <= i < matNumRows (mat) && 0 <= j < matNumCols (mat) ::
 }
 
 // Creates a matrix with designated number of rows and columns using f
-// Entry at location (i, j) has value f (i, j)
+// Resulting entry at location (i, j) has value f (i, j)
 function makeMatrix (rows : int, cols : int, f : (int, int) --> real) : (res : Matrix)
 requires 0 <= rows
 requires 0 <= cols

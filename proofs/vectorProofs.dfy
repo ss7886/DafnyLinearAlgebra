@@ -20,11 +20,11 @@ ensures vecEquals (vecAppend (x, vec1), vecAppend (x, vec2))
 {
     assert vecGet (vecAppend (x, vec1), 0) == x;
     assert vecGet (vecAppend (x, vec2), 0) == x;
-    assert forall i {:trigger vecGet (vecAppend (x, vec1), i)} | 1 <= i < vecLength (vec1) + 1 ::
+    assert forall i | 1 <= i < vecLength (vec1) + 1 ::
             vecGet (vecAppend (x, vec1), i) == vecGet (vec1, i - 1);
-    assert forall i {:trigger vecGet (vecAppend (x, vec1), i)} | 1 <= i < vecLength (vec1) + 1 ::
+    assert forall i | 1 <= i < vecLength (vec1) + 1 ::
             vecGet (vecAppend (x, vec2), i) == vecGet (vec2, i - 1);
-    assert forall i {:trigger vecGet (vecAppend (x, vec1), i + 1)} | 1 <= i < vecLength (vec1) + 1 :: 
+    assert forall i | 1 <= i < vecLength (vec1) + 1 :: 
             vecGet (vecAppend (x, vec1), i) == vecGet (vecAppend (x, vec2), i);
     assert forall i | 0 <= i < vecLength (vec1) + 1 :: vecGet (vecAppend (x, vec1), i) == vecGet (vecAppend (x, vec2), i);
 }

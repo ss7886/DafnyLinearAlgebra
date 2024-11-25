@@ -76,6 +76,8 @@ ensures vecNormSq (vecSub (matVecMult (A, normalEquations (A, b, ATAinv)), b)) <
     vecNormSqMin (vecSub (x, ATb));
 }
 
+// Show ||A(A^T A)^-1 A^T b - b||^2 <= ||Ax - b||^2
+// In other words, x* = (A^T A)^-1 A^T b is the optimal solution to minimize ||Ax - b||^2
 lemma normalEquationsOpt (A : Matrix, b : Vector, ATAinv : Matrix, x : Vector)
 requires matNumRows (A) == vecLength (b)
 requires matNumCols (A) == vecLength (x)

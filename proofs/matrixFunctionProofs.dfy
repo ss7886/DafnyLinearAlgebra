@@ -38,7 +38,8 @@ ensures vecEquals (matVecMult (mat1, vec), matVecMult (mat2, vec))
 lemma dotProdTr (mat : Matrix, vec1 : Vector, vec2 : Vector)
 requires matNumCols (mat) == vecLength (vec1)
 requires matNumRows (mat) == vecLength (vec2)
-ensures vecDotProd (matVecMult (mat, vec1), vec2) == vecDotProd (vec1, matVecMult (matTr (mat), vec2))
+ensures vecDotProd (matVecMult (mat, vec1), vec2) == 
+    vecDotProd (vec1, matVecMult (matTr (mat), vec2))
 {
     dotProdTrAux (mat, vec1, vec2, 0);
     matVecMultAuxEquiv (mat, vec1, 0);

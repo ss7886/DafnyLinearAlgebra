@@ -5,7 +5,8 @@ include "matrixFunctions.dfy"
 function matVecMult (mat : Matrix, vec : Vector) : (res : Vector)
 requires matNumCols (mat) == vecLength (vec)
 ensures vecLength (res) == matNumRows (mat)
-ensures forall i | 0 <= i < matNumRows (mat) :: vecGet (res, i) == vecDotProd (matGetRow (mat, i), vec)
+ensures forall i | 0 <= i < matNumRows (mat) :: 
+    vecGet (res, i) == vecDotProd (matGetRow (mat, i), vec)
 {
     matVecMultAux (mat, vec, 0)
 }
@@ -44,5 +45,6 @@ requires matNumRows (mat1) == matNumCols (mat1)
 requires matNumRows (mat2) == matNumCols (mat2)
 requires matNumRows (mat1) == matNumRows (mat2)
 {
-    matIsIdentity (matMatMult (mat1, mat2)) && matIsIdentity (matMatMult (mat2, mat1))
+    matIsIdentity (matMatMult (mat1, mat2)) && 
+    matIsIdentity (matMatMult (mat2, mat1))
 }
