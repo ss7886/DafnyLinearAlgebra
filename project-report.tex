@@ -1,0 +1,85 @@
+\documentclass[12pt]{article}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[a4paper, total={6in, 9in}]{geometry}
+
+\begin{document}
+
+\title{COS 516: Final Project Report\\
+\emph{Proving the Correctness of the Normal Equations with Dafny}} %Replace X with homework number, Y with problem number.
+\author{Samuel Sanft}
+\date{\today}
+\maketitle
+
+\section*{Honor Statement}
+This assignment represents my own work in accordance with university policy.
+
+\section{Introduction}
+The Normal Equations refer to the following equation and its associated solution:
+\begin{align*}
+A^T A x &= A^T b \\
+x &= (A^T A)^{-1} A^T b
+\end{align*}
+
+\section{Overview}
+
+\section{Project Tasks}
+
+\section{Results}
+
+\section{Discussion}
+
+\section{Conclusions}
+
+\section{Appendix}
+\subsection{Proof of Optimality of Normal Equations}
+In this section, a proof is provided that the solution to the Normal Equations is an optimal solution to the OLS problem. The proof roughly matches the structure of the proof that is written in Dafny. Since the squared euclidean norm is a convex function, this is normally done by showing that the solution to the Normal Equations satisfies the first-order optimality conditions for the OLS problem. However, in order to verify the proof in Dafny without implementing symbolic or automatic differentiation, it was necessary to find a proof that did not require differentiation. That proof is given here.
+
+In order to show that the Normal Equations provide an optimal solution to the OLS problem, it is sufficient to show (let $x^* := (A^T A)^{-1} A^T b$):
+$$\forall x, ||Ax^* - b||^2 \le ||Ax - b||^2$$
+
+\subsubsection{Lemma 1}
+\begin{align*}
+||Ax^*||^2 &= -\langle Ax^*, b \rangle \\
+\cline{1 - 2}
+||Ax^*||^2 &= \langle Ax^*, Ax^* \rangle \\
+ &= \langle x^*, A^T Ax^* \rangle \\
+ &= \langle x^*, A^T A (A^T A)^{-1} A^T b \rangle \\
+ &= \langle x^*, A^T b \rangle \\
+ &= \langle Ax^*, b \rangle
+\end{align*}
+
+\subsubsection{Lemma 2}
+Using Lemma 1:
+\begin{align*}
+||Ax^* - b||^2 &= -\langle Ax^*, b \rangle + ||b||^2 \\
+\cline{1 - 2}
+||Ax^* - b||^2 &= ||Ax^*||^2 - 2 \langle Ax^*, b \rangle + ||b||^2 \\
+ &= \langle Ax^*, b \rangle - 2 \langle Ax^*, b \rangle + ||b||^2 \\
+ &= -\langle Ax^*, b \rangle + ||b||^2
+\end{align*}
+
+\subsubsection{Lemma 3}
+Using Lemma 1:
+\begin{align*}
+||Ax - b||^2 &= ||Ax - Ax^*||^2 - \langle Ax^*, b \rangle + ||b||^2 \\
+\cline{1 - 2}
+||Ax - b||^2 &= ||Ax||^2 - 2 \langle Ax, b \rangle + ||b||^2 \\
+ &= ||Ax||^2 - 2 \langle A (A^T A)^{-1} A^T A x, b \rangle + ||b||^2 \\
+ &= ||Ax||^2 - 2 \langle Ax, A (A^T A)^{-1} A^T b \rangle + ||b||^2 \\
+ &= ||Ax||^2 - 2 \langle Ax, Ax^* \rangle + ||Ax^*||^2 - ||Ax^*||^2 + ||b||^2 \\
+ &= ||Ax - Ax^*||^2 - ||Ax^*||^2 + ||b||^2 \\
+ &= ||Ax - Ax^*||^2 - \langle Ax^*, b \rangle + ||b||^2
+\end{align*}
+
+\subsubsection{Proof}
+Now the original inequality can be demonstrated, using Lemmas 2 and 3 and the fact that the euclidean norm is always nonnegative:
+\begin{align*}
+||Ax^* - b||^2 &\le ||Ax - b||^2 \\
+-\langle A^*, b \rangle + ||b||^2 &\le ||Ax - Ax^*||^2 - \langle A^*, b \rangle + ||b||^2 \\
+0 &\le ||Ax - Ax^*||^2
+\end{align*}
+
+\end{document}

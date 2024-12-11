@@ -1,0 +1,48 @@
+\documentclass[10pt]{article}
+
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{bbm}
+
+\title{COS 516: Class Project Outline\\
+\emph{Proving the Correctness of the Normal Equations with Dafny}}
+
+\author{\emph{Samuel Sanft}} 
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+The normal equations are the solution to the optimization problem: $\min_x ||Ax - b||^2$, where $A \in \mathbbm{R}^{m \times n}, x \in \mathbbm{R}^{n}, b \in \mathbbm{R}^{m}$. The normal equations state that the optimal solution to the optimization problem is the solution to the following linear equation: $A^T A x^* = A^T b$, or $x^* = (A^T A)^{-1} A^T b$, when $A^T A$ is invertible. The goal of my project is to implement linear algebraic operations (vector addition, matrix-vector/matrix-matrix multiplication, dot-products/vector norms, etc) and then prove the correctness of the normal equations in Dafny.
+
+\section{Proposed Work}
+
+Since there are no native types for dealing with matrices and vectors in Dafny, I'll start by defining these types and operations dealing with them. I'll then verify the correctness of various linear algebraic identities that will be useful in ultimately proving the correctness of the normal equations.
+\begin{itemize}
+\item which tool(s) you plan to use: Dafny
+\item which examples you plan to target: The normal equations and any linear algebraic principles necessary to implement/prove their correctness.
+\item what modules you plan to create or implement: 
+	\begin{itemize}
+	\item Vector and Matrix types
+	\item Vector-vector operations (vector addition, dot-product, vector norm) with associated proofs ($v_1 + v_2 = v_2 + v_1, v_1^T v_1 = ||v_1||^2$, etc)
+	\item Matrix-vector multiplication with associated proofs
+	\item Matrix-matrix multiplication with associated proofs
+	\item Proofs related to matrix inverses
+	\item Proof of normal equations 
+	\end{itemize}
+\item what deliverables you will provide (in addition to a final project report): All of the implemented modules and their related proofs. These could be used to implement and verify the correctness of other algorithms dealing with matrices and vectors in future work.
+\end{itemize}
+
+\section{Proposed Schedule}
+\begin{itemize}
+\item Week 1 (Oct 21 - 27): Begin defining types and basic operations
+\item Week 2 (Oct 28 - Nov 3): Finish defining all necessary operations and work on related proofs
+\item Week 3 (Nov 4 - Nov 10): Verify case where $A^T A = I$ as intermediate step
+\item Week 4 (Nov 11 - Nov 17): Verify normal equations
+\item Week 5 (Nov 18 - Nov 24): Finish verification + work on presentation
+\item project presentations: November 25, December 2 and 4 (in class, schedule is TBD).
+\item final project report: due on December 13.
+\end{itemize}
+
+\end{document}
