@@ -24,7 +24,7 @@ A^T A x &= A^T b \\
 x &= (A^T A)^{-1} A^T b
 \end{align*}
 
-This solution for $x$ (a unique solution exists when $A^T A$ is invertible, or when the columns of $A$ are linearly independent), is the optimal solution to the following ordinary least squares (OLS) optimization problem (let $||\cdot||$ be the euclidean or 2-norm):
+This solution for $x$ (a unique solution exists when $A^T A$ is invertible, or when the columns of $A$ are linearly independent), is the optimal solution to the following ordinary least squares (OLS) optimization problem (let $||\cdot||$ be the mathematical notation for the euclidean or 2-norm):
 $$\min_x ||Ax - b||^2$$
 See \hyperref[sec:mathproof]{Appendix 5.1} for a complete mathematical proof.
 
@@ -37,7 +37,7 @@ The goal of this project is to formalize this problem and provide a machine-chec
 \section{Project Tasks}
 \subsection{Implementation}
 \subsubsection{Data Types}
-The first step of the implementation was defining abstract data types for matrices and vectors. Dafny differentiates between functions and methods. Methods may have side effects but may not be used in expressions. Functions may not have side effects but may be used in expressions. Because of the need to use linear algebraic operations in order to define the OLS optimization problem, I opted to implement all of the operations using functions. This decision informed how I chose to implement the data types. Because my operations can not have side effects (they must be purely functional), this meant that I couldn't use arrays or other data types that manipulate data in the heap. Instead I opted to implement the data types using functional data structures.
+The first step of the implementation was defining abstract data types for matrices and vectors. Dafny differentiates between functions and methods. Methods may have side effects but may not be used in expressions. Functions may not have side effects but may be used in expressions. Because of the need to use linear algebraic operations in expressions in order to define the OLS optimization problem, I opted to implement all of the operations using functions. This decision informed how I chose to implement the data types. Because my functions can not have side effects,, this meant that I couldn't use arrays or other data types that manipulate data in the heap. Instead I opted to implement the data types using functional data structures.
 
 The \verb|Matrix| type is defined as a tuple, consisting of a two-dimensional sequence of real numbers and two integers, representing the dimensions of the matrix. The module also contains the functions \verb|matNumRows|, \verb|matNumCols|, and \verb|matGet|, which return the number of rows in a matrix, the number of columns in a matrix, or a given entry in a matrix. The function signatures, with their specified  requirements and guarantees are given:
 
@@ -71,7 +71,7 @@ function vecGet (vec : Vector, i : int) : real
 requires 0 <= i < vecLength (vec)
 \end{verbatim}
 
-The following predicate was also defined, to test the equality of two equally sized vectors:
+The following predicate was also defined, to check the equality of two vectors of equal length:
 
 \begin{verbatim}
 predicate vecEquals (vec1 : Vector, vec2 : Vector)
@@ -92,7 +92,7 @@ The following operations were implemented for vector arithmetic (for complete si
 \item Vector Scaling
 \end{itemize}
 
-These functions were all defined recursively instead of using loops. As an example, the code for \verb|vecDotProd| is given below. The functions only access the \verb|Vector| data structure through the functions defined in the vector module, meaning that the implementation of the \verb|Vector| abstract data type can be rewritten without having to rewrite any of the arithmetic operations. Also, because the functions are written recursively, it is easier to reason about them, as there is no need for loop invariants and proofs can be done inductively, which will be seen in \hyperref[sec:proofs]{Section 2.2 Proofs}.
+These functions were all defined recursively instead of using loops. As an example, the code for \verb|vecDotProd| is given below. The functions only access the \verb|Vector| data structure through the functions defined in the vector module, meaning that the implementation of the \verb|Vector| abstract data type can be rewritten without having to rewrite any of the arithmetic operations. Also, because the functions are written recursively, it is easier to reason about them, as there is no need for loop invariants and proofs can be done inductively, which will be seen in \hyperref[sec:proofs]{Section 2.2 Proofs}. An alternative to the recursive approach could be to use the \verb|by method| clause, which allows loops to be used within a function, although the function-by-method approach was not used for this project.
 
 \begin{verbatim}
 function vecDotProd (vec1 : Vector, vec2 : Vector) : real
@@ -133,7 +133,7 @@ The multiplication functions are implemented recursively and use the \verb|vecDo
 
 \subsection{Proofs}
 \label{sec:proofs}
-Note: Let $\langle \cdot, \cdot \rangle$ be the notation for the dot-product of two vectors.
+Note: Let $\langle \cdot, \cdot \rangle$ be the mathematical notation for the dot-product of two vectors.
 
 Proofs about the basic properties of all of the implemented operations were written as lemmas in the Dafny language. Some lemmas were able to be proven automatically with little to no manual input. For example, the following lemma about the transitivity of vector addition (for any vectors $x, y, z$ of equal length, $(x + y) + z = x + (y + z)$) required no function body in order to be verified:
 
@@ -147,7 +147,7 @@ ensures vecEquals (
 )
 \end{verbatim}
 
-For functions that were implemented using an auxiliary recursive function, for example \verb|vecDotProd| and \verb|vecDotProdAux|, an extra lemma reasoning about the auxiliary function was usually necessary. For example, in order to show that the dot product is distributive with addition (for any vectors $x, y, z$ of equal length, $\langle x, y + z \rangle = \langle x, y \rangle + \langle x, z \rangle$), first a lemma is defined that shows that the auxiliary method is distributive with addition:
+For functions that were implemented using an auxiliary recursive function, for example \verb|vecDotProd| and \verb|vecDotProdAux|, an extra lemma reasoning about the auxiliary function was usually necessary. For example, in order to show that the dot product is distributive with addition (for any vectors $x, y, z$ of equal length, $\langle x, y + z \rangle = \langle x, y \rangle + \langle x, z \rangle$), first a lemma is defined that shows that the auxiliary method is distributive:
 
 \begin{verbatim}
 lemma vecDotProdAuxDist (vec1 : Vector, vec2 : Vector,

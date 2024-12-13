@@ -125,7 +125,7 @@ ensures vecDotProd (vecScale (alpha1, vec1), vecScale (alpha2, vec2)) == alpha1 
 }
 
 // ||av||^2 = a^2 ||v||^2
-lemma vvecNormSqScale (alpha : real, vec : Vector)
+lemma vecNormSqScale (alpha : real, vec : Vector)
 ensures vecNormSq (vecScale (alpha, vec)) == alpha * alpha * vecNormSq (vec)
 {
     vecDotProdScaleRL (alpha, alpha, vec, vec);
