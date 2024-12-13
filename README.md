@@ -5,7 +5,7 @@ See publicly available [Github](https://github.com/ss7886/DafnyLinearAlgebra) re
 
 LaTex files and pdfs are available for the project outline and project report as well as a PowerPoint file containing the presentation slides.
 
-All Dafny code is in /code directory.
+All Dafny code is in `/code` directory.
 - `matrix.dfy` implements an abstract data type for matrices.
 - `vector.dfy` implements an abstract data type for vectors.
 - `vectorFunctions.dfy` implements functions to perform vector arithmetic.
